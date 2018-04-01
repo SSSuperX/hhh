@@ -1,0 +1,1040 @@
+import tkinter
+from tkinter import *
+from math import pi,e,sin,cos,tan,log,log10,ceil,degrees,radians,exp,asin,acos,floor,factorial
+from numpy import *
+import numpy as np
+from scipy.special import comb
+
+
+class Calculator(object):
+
+    def __init__(self, master=None):
+        self.root = master
+        self.create_page()
+
+    def create_page(self):
+        self.aaa = Frame(self.root)
+        self.aaa.grid()
+        Button(self.aaa, text='Bcalculator',height=5, width=30,font =10,bg ='silver',command=self.bc).grid(row=0,column=0,columnspan=6)
+        Button(self.aaa, text='Lcalculator',height=5, width=30,font =10,bg ='silver',command=self.lc).grid(row=1,column=0,columnspan=6)
+        Button(self.aaa, text='Scalculator',height=5, width=30,font =10,bg ='silver',command=self.sc).grid(row=2,column=0,columnspan=6)
+        Button(self.aaa, text='Pcalculator',height=5, width=30,font =10,bg ='silver',command=self.pc).grid(row=3,column=0,columnspan=6)
+    def bc(self):
+        self.aaa.grid_forget()
+        Bcalculator(self.root)
+    def lc(self):
+        self.aaa.grid_forget()
+        Lcalculator(self.root)
+    def sc(self):
+        self.aaa.grid_forget()
+        Scalculator(self.root)
+    def pc(self):
+        self.aaa.grid_forget()
+        Pcalculator(self.root)
+
+class Bcalculator(object):
+    def __init__(self, master=None):
+        self.window = master
+        self.window.title('Scientific Calculator')
+        self.window.configure(background="white")
+        self.create_frame()
+
+    def returnback(self):
+        self.bbb.grid_forget()
+        Calculator(self.window)
+
+    def clearall(self):
+        self.string.set("")
+        self.result.set("")
+        self.show.set("")
+
+    def equals(self):
+        res1 = ("")
+        try:
+            res1 = eval(self.result.get())
+            self.show.set(res1)
+        except:
+            res1 = "INVALID INPUT"
+            self.show.set(res1)
+
+    def addChar(self, char):
+        if (char == '**'):
+            self.string.set(self.string.get() + (str('^')))
+            self.result.set(self.result.get() + (str('**')))
+        else:
+            self.string.set(self.string.get() + (str(char)))
+            self.result.set(self.result.get() + (str(char)))
+
+    def delete(self):
+
+        self.string.set(self.string.get()[0:-1])
+        self.result.set(self.result.get()[0:-1])
+        self.show.set("")
+
+    def create_frame(self):
+        self.bbb = Frame(self.window)
+        self.bbb.grid()
+        self.string = StringVar()
+        self.result = StringVar()
+        self.show = StringVar()
+        self.entry = Entry(self.bbb, textvariable=self.string)
+        self.entry.grid(row=0, column=0, columnspan=6)
+        self.entry.configure(background="white")
+        self.entry.focus()
+        self.res = Entry(self.bbb, textvariable=self.show)
+        self.res.grid(row=1, column=0, columnspan=6)
+        self.res.configure(background="white")
+        self.res.focus()
+        values = ["7", "8", "9", "/", "mod", "←", "AC",
+                  "4", "5", "6", "*", "(", ")", "^",
+                  "1", "2", "3", "-", "=","return",
+                  ",", "0", ".",  "+","min","max", "abs",
+                  "sin", "asin", "cos", "acos", "tan", "atan","ln",
+                   "π", "e", "floor", "ceil", "degrees", "radians", "factorial"]
+        text = 1
+        i = 0
+        row = 2
+        col = 0
+        for txt in values:
+            padx = 10
+            pady = 10
+            if (i == 7):
+                row = 3
+                col = 0
+            if (i == 14):
+                row = 4
+                col = 0
+            if (i == 20):
+                row = 5
+                col = 0
+            if (i == 27):
+                row = 6
+                col = 0
+            if (i == 34):
+                row = 7
+                col = 0
+            if (txt == '='):
+                btn = Button(self.bbb, height=2, width=4, padx=40, pady=pady, text=txt,
+                             command=lambda txt=txt: self.equals())
+                btn.grid(row=row, column=col, columnspan=2, padx=2, pady=2)
+                btn.configure(background="orange")
+            elif (txt == 'factorial'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.addChar(txt))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="white")
+            elif (txt == 'π'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.addChar("pi"))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="white")
+            elif (txt == '←'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.delete())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == 'AC'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.clearall())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="red")
+            elif (txt == '^'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.addChar('**'))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="white")
+            elif (txt == 'ln'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.addChar('log'))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="white")
+            elif (txt == 'mod'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.addChar('%'))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="white")
+            elif (txt == 'return'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda: self.returnback())
+                btn.grid(row=row, column=col+1, padx=1, pady=1)
+                btn.configure(background="red")
+            else:
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.addChar(txt))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="white")
+
+            col = col + 1
+            i = i + 1
+
+class Lcalculator(object):
+    def __init__(self, master=None):
+        self.window = master
+        self.window.title('Scientific Calculator')
+        self.window.configure(background="white")
+        self.create_frame()
+
+    def returnback(self):
+        self.bbb.grid_forget()
+        Calculator(self.window)
+
+    A = []
+    B = []
+
+    def clearall(self):
+        self.string.set("")
+        self.A = []
+        self.B = []
+        self.show.set("")
+
+    def addChar(self, char):
+        self.string.set(self.string.get() + (str(char)))
+
+    def delete(self):
+        self.string.set(self.string.get()[0:-1])
+
+    def linalgdet(self, D):
+        print(D)
+        x = np.linalg.det(D)
+        self.show.set(x)
+
+    def Tr(self, D):
+        x = array(D).T
+        self.show.set(x)
+
+    def dota(self):
+        x = np.dot(self.A, self.B)
+        self.show.set(x)
+
+    def addup(self):
+        print(self.A)
+        print(self.B)
+        x = array(self.A) + array(self.B)
+        self.show.set(x)
+
+    def substracta(self):
+        x = array(self.A) + (array(self.B) * (-1))
+        self.show.set(x)
+
+    def cunA(self):
+        if self.string.get() == '':
+            self.A = self.res_to_la(self.show.get())
+        else:
+            self.C = self.str_to_la(self.string.get())
+            self.A = self.C
+        self.string.set("")
+        print(self.A)
+
+    def cunB(self):
+        if self.string.get() == '':
+            self.B = self.res_to_la(self.show.get())
+        else:
+            self.C = self.str_to_la(self.string.get())
+            self.B = self.C
+        self.string.set("")
+        print(self.B)
+
+    def inverse(self, D):
+        D_det = np.linalg.det(D)
+        if D_det != 0:
+            x = np.linalg.inv(D)
+        self.show.set(x)
+
+    def rank(self, D):
+        x = np.linalg.matrix_rank(D)
+        self.show.set(x)
+
+    def eig(self, D):
+        a, b = np.linalg.eig(D)
+        self.show.set(a)
+
+    def eit(self, D):
+        a, b = np.linalg.eig(D)
+        self.show.set(b)
+
+    def accompanion(self, D):
+        D_det = np.linalg.det(D)
+        if D_det != 0:
+            x = np.linalg.inv(D)
+        a = x * D_det
+        self.show.set(a)
+
+    def linalgsolve(self, A, B):
+        x = np.linalg.solve(A, B)
+        self.show.set(x)
+
+    def str_to_la(self, str):
+
+        listt = str.split(',')
+        listt = list(map(lambda x: float(x), listt))
+        lenn = len(listt) - 1
+        if lenn % listt[0] != 0:
+            print("[ERORR] 输入数据不是 %d 的整数倍!" % listt[0])
+            return
+        lis = []
+        lisrow = []
+        count = 0
+        for elem in listt[1:]:
+
+            lisrow += [elem]
+            count += 1
+            if count == listt[0]:
+                count = 0
+                lis += [lisrow]
+                lisrow = []
+        # print(lis)
+        return lis
+
+    def res_to_la(self, str):
+        # print(str)
+        raw = str.count(']') - 1
+        list1 = str.replace('[', '').replace(']', '').replace('\n', '').split('  ')
+        # print(list1)
+        list2 = list(map(lambda x: float(x), list1))
+        # print(list2)
+        n = len(list2) / raw
+        lis = []
+        lisrow = []
+        count = 0
+        for elem in list2[0:]:
+
+            lisrow += [elem]
+            count += 1
+            if count == n:
+                count = 0
+                lis += [lisrow]
+                lisrow = []
+        return lis
+
+    def create_frame(self):
+        self.bbb = Frame(self.window)
+        self.bbb.grid()
+        notice = Label(self.bbb, text="请输入矩阵，格式为第一个数字为列数，\n接着依次输入矩阵，以逗号分开")
+        notice.grid(row=0, column=0, columnspan=6)
+        notice.focus()
+        self.string = StringVar()
+        self.result = StringVar()
+        self.show = StringVar()
+        self.entry = Entry(self.bbb, textvariable=self.string)
+        self.entry.grid(row=1, column=0, columnspan=6)
+        self.entry.configure(background="white")
+        self.entry.focus()
+        self.res = Entry(self.bbb, textvariable=self.show)
+        self.res.grid(row=2, column=0, columnspan=6)
+        self.res.configure(background="white")
+        self.res.focus()
+
+        self.C = 0
+
+        values = ["7", "8", "9", "←", "AC",
+                  "4", "5", "6", "A*B", "A+B",
+                  "1", "2", "3", "A-B", "行列式值",
+                  ",", "0", ".", "转置", "逆矩阵",
+                  "伴随矩阵", "秩", "特征值", "特征向量","return",
+                  "=A", "=B", "求解线性方程组"]
+        text = 1
+        i = 0
+        row = 6
+        col = 0
+        for txt in values:
+            padx = 10
+            pady = 10
+            if (i == 5):
+                row = 7
+                col = 0
+            if (i == 10):
+                row = 8
+                col = 0
+            if (i == 15):
+                row = 9
+                col = 0
+            if (i == 20):
+                row = 10
+                col = 0
+            if (i == 25):
+                row = 11
+                col = 0
+            if (i == 28):
+                row = 12
+                col = 0
+            if (txt == 'A*B'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.dota())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == 'A+B'):
+                    btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                                 command=lambda txt=txt: self.addup())
+                    btn.grid(row=row, column=col, padx=1, pady=1)
+                    btn.configure(background="grey")
+            elif (txt == 'A-B'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.substracta())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '=A'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.cunA())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '=B'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.cunB())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '行列式值'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                                 command=lambda txt=txt: self.linalgdet(self.A))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '转置'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                                 command=lambda txt=txt: self.Tr(self.A))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '逆矩阵'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                                 command=lambda txt=txt: self.inverse(self.A))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '秩'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                                 command=lambda txt=txt: self.rank(self.A))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '特征值'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                                 command=lambda txt=txt: self.eig(self.A))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '特征向量'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                                 command=lambda txt=txt: self.eit(self.A))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '伴随矩阵'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                                 command=lambda txt=txt: self.accompanion(self.A))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '←'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                                 command=lambda txt=txt: self.delete())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == 'AC'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                                 command=lambda txt=txt: self.clearall())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="red")
+            elif (txt == '求解线性方程组'):
+                btn = Button(self.bbb, height=2, width=4, padx=40, pady=pady, text=txt,
+                                 command=lambda txt=txt: self.linalgsolve())
+                btn.grid(row=row, column=col, columnspan=2, padx=1, pady=1)
+                btn.configure(background="orange")
+            elif (txt == 'return'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda: self.returnback())
+                btn.grid(row=row, column=col,padx=1, pady=1)
+                btn.configure(background="red")
+            else:
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                                 command=lambda txt=txt: self.addChar(txt))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="white")
+
+            col = col + 1
+            i = i + 1
+
+class Scalculator(object):
+    def __init__(self, master=None):
+        self.window = master
+        self.window.title('Scientific Calculator')
+        self.window.configure(background="white")
+        self.create_frame()
+
+    def returnback(self):
+        self.bbb.grid_remove()
+        Calculator(self.window)
+
+    def create_frame(self):
+        self.bbb = Frame(self.window)
+        self.bbb.grid()
+        notice = Label(self.bbb,text="请输入一个数组顺序分别为身高(m)，体重(kg)，\n肺活量，50米跑(s),坐位体前屈(cm)，立定跳远(m),\n引体向上（男）或一分钟仰卧起坐（女），\n1000米（男）(s)或800米（女）(s),以逗号分开")
+        notice.grid(row=0,column=0,columnspan=40,rowspan=2)
+        notice.focus()
+        self.string = StringVar()
+        entry = Entry(self.bbb, textvariable=self.string)
+        entry.grid(row=4, column=0, columnspan=6)
+        entry.configure(background="white")
+
+        values = ["7", "8", "9","AC",
+                  "4", "5", "6","←",
+                  "1", "2", "3","return",
+                  ".", "0", ",",
+                  "男12","女12","男34","女34"]
+        text = 1
+        i = 0
+        row = 5
+        col = 0
+        for txt in values:
+            padx = 10
+            pady = 10
+            if (i == 4):
+                row = 6
+                col = 0
+            if (i == 8):
+                row = 7
+                col = 0
+            if (i == 12):
+                row = 8
+                col = 0
+            if(i == 15):
+                row = 9
+                col = 0
+            if(i == 19):
+                row = 10
+                col = 0
+            col = col + 1
+            i = i + 1
+            if(txt == 'AC'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.clearall())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="orange")
+            elif(txt == '←'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.delete())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '男12'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.evalM(self.str_to_la(self.string.get())))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif(txt == '男34'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.evalM(self.str_to_la(self.string.get())))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '女12'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.evalW(self.str_to_la(self.string.get())))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '女34'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.evalW(self.str_to_la(self.string.get())))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == 'return'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda: self.returnback())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="orange")
+            else:
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.addChar(txt))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="white")
+
+    def clearall(self):
+        self.string.set("")
+
+    def addChar(self, char):
+        self.string.set(self.string.get() + (str(char)))
+    def delete(self):
+        self.string.set(self.string.get()[0:-1])
+    def standardM_lung(self,x1):
+        if(x1<2350):
+            return 0
+        elif(2350<x1<3200):
+            return ((x1-2350)/17+10)
+        elif(3200<x1<4400):
+            return ((x1-3200)/60+60)
+        elif(4400<x1<4900):
+            return ((x1-4400)/50+80)
+        elif(4900<x1<5140):
+            return ((x1-4900)/24+90)
+        else:
+            return 100
+    def standardW_lung(self,x2):
+        if(x2<1850):
+            return 0
+        elif(1850<x2<2050):
+            return ((x2-1850)/4+10)
+        elif(2050<x2<3050):
+            return ((x2-2050)/50+60)
+        elif(3050<x2<3350):
+            return ((x2-3050)/30+80)
+        elif(3350<x2<3450):
+            return ((x2-4900)/10+90)
+        else:
+            return 100
+    def standardM_50run(self,x3):
+        if(x3>10):
+            return 0
+        elif(9<x3<10):
+            return ((10-x3)*50+10)
+        elif(9<x3<7):
+            return ((9-x3)*10+60)
+        elif(7<x3<6.6):
+            return ((7-x3)*50+80)
+        else:
+            return 100
+    def standardW_50run(self,x4):
+        if(x4>11.2):
+            return 0
+        elif(11.2<x4<10.2):
+            return ((11.2-x4)*50+10)
+        elif(10.2<x4<8.2):
+            return ((10.2-x4)*10+60)
+        elif(8.2<x4<7.6):
+            return ((8.2-x4)*50/3+80)
+        elif(7.6<x4<7.4):
+            return ((7.6-x4)*50+90)
+        else:
+            return 100
+    def standardM_sit(self,x5):
+        if(x5<-0.8):
+            return 0
+        elif(-0.8<x5<4.2):
+            return ((x5+0.8)*10+10)
+        elif(4.2<x5<18.2):
+            return ((x5-4.2)*10/7+60)
+        elif(18.2<x5<21.5):
+            return ((x5-18.2)*10/3.3+80)
+        elif(21.5<x5<25.1):
+            return ((x5-21.5)*10/3.6+90)
+        else:
+            return 100
+    def standardW_sit(self,x6):
+        if(x6<2.5):
+            return 0
+        elif(2.5<x6<6.5):
+            return ((x6-2.5)*1.25+10)
+        elif(6.5<x6<19.5):
+            return ((x6-6.5)*10/7.5+60)
+        elif(19.5<x6<22.4):
+            return ((x6-19.5)*10/2.9+80)
+        elif(22.4<x6<26.3):
+            return ((x6-22.4)*10/3.9+90)
+        else:
+            return 100
+    def standardM_jumpf(self,x7):
+        if(x7<185):
+            return 0
+        elif(185<x7<210):
+            return ((x7-185)*2+10)
+        elif(210<x7<250):
+            return ((x7-210)*0.5+60)
+        elif(250<x7<265):
+            return((x7-250)*10/15+80)
+        elif(265<x7<275):
+            return ((x7-265)*1+90)
+        else:
+            return 100
+    def standardW_jumpf(self,x8):
+        if(x8<127):
+            return 0
+        elif(127<x8<152):
+            return ((x8-127)*2+10)
+        elif(152<x8<182):
+            return ((x8-210)*10/15+60)
+        elif(182<x8<196):
+            return((x8-182)*10/14+80)
+        elif(196<x8<208):
+            return ((x8-265)*10/12+90)
+        else:
+            return 100
+    def standardM_hangup(self,x9):
+        if (x9<6):
+            return 0
+        elif(6<x9<11):
+            return ((x9-5)*10+10)
+        elif(11<x9<16):
+            return ((x9-10)*4+60)
+        elif(16<x9<20):
+            return ((x9-16)*5+80)
+        else:
+            return 100
+    def standardW_lieup(self,x10):
+        if (x10<17):
+            return 0
+        elif(17<x10<27):
+            return ((x10-17)*5+10)
+        elif(27<x10<47):
+            return ((x10-27)*1+60)
+        elif(47<x10<53):
+            return ((x10-47)*10/6+80)
+        elif(53<x10<57):
+            return ((x10-53)*2.5+90)
+        else:
+            return 100
+    def standardM_1000run(self,x11):
+        if(x11>370):
+            return 0
+        elif(270<x11<370):
+            return ((370-x11)*0.5+10)
+        elif(220<x11<270):
+            return ((270-x11)*0.4+60)
+        elif(205<x11<220):
+            return ((220-x11)*10/15+80)
+        elif(195<x11<205):
+            return ((205-x11)*1+90)
+        else:
+            return 100
+    def standardW_800run(self,x12):
+        if(x12>322):
+            return 0
+        elif(272<x12<322):
+            return ((322-x12)*1+10)
+        elif(222<x12<272):
+            return ((272-x12)*0.4+60)
+        elif(208<x12<222):
+            return ((222-x12)*10/14+80)
+        elif(196<x12<208):
+            return ((208-x12)*10/12+90)
+        else:
+            return 100
+    def standardM_BMI(self,x13):
+        if(x13>28):
+            return 60
+        elif(28<x13<24 or x13<17.8):
+            return 80
+        else:
+            return 100
+    def standardW_BMI(self,x14):
+        if (x14>28):
+            return 60
+        elif (28<x14<24 or x14 < 17.1):
+            return 80
+        else:
+            return 100
+    def str_to_la(self, str):
+
+        listt = str.split(',')
+        listt = list(map(lambda x: float(x), listt))
+        # print(lis)
+        return listt
+    def evalM(self,list):
+        s = 0
+        s = s+list[1]/pow(list[0],2)*0.15+self.standardM_lung(list[2])*0.15+self.standardM_50run(list[3])*0.2+self.standardM_sit(list[4])*0.1+self.standardM_jumpf(list[5])*0.1+self.standardM_hangup(list[6])*0.1+self.standardM_1000run(list[7])*0.2
+        self.string.set(s)
+    def evalW(self,list):
+        y = 0
+        y = y+list[1]/pow(list[0],2)*0.15+self.standardW_lung(list[2])*0.15+self.standardW_50run(list[3])*0.2+self.standardW_sit(list[4])*0.1+self.standardW_jumpf(list[5])*0.1+self.standardW_lieup(list[6])*0.1+self.standardW_800run(list[7])*0.2
+        self.string.set(y)
+
+class Pcalculator(object):
+    def __init__(self, master=None):
+        self.window = master
+        self.window.title('Scientific Calculator')
+        self.window.configure(background="white")
+        self.create_frame()
+
+    def returnback(self):
+        self.bbb.grid_remove()
+        Calculator(self.window)
+
+    def create_frame(self):
+        self.bbb = Frame(self.window)
+        self.bbb.grid()
+        notice = Label(self.bbb, text="欢迎使用")
+        notice.grid(row=0, column=0, columnspan=6)
+        notice.focus()
+        self.string = StringVar()
+        self.show = StringVar()
+        entry = Entry(self.bbb, textvariable=self.string)
+        entry.grid(row=1, column=0, columnspan=6)
+        entry.configure(background="white")
+        self.res = Entry(self.bbb,textvariable=self.show)
+        self.res.grid(row=2,column=0,rowspan=3,columnspan=6)
+        self.res.configure(background="white")
+
+        self.C = 0
+
+
+        values = ["7", "8", "9", "←",   "AC",
+                  "4", "5", "6", "平均值", "中位数",
+                  "1", "2", "3", "极差", "方差",
+                  ",", "0", ".", "二项前n","泊松前n",
+                  "方差已知的μ置信区间", "方差未知的μ置信区间", "方差\n置信区间",
+                  "两总体均值差置信区间","两总体方差比置信区间","return"]
+        text = 1
+        i = 0
+        row = 6
+        col = 0
+        for txt in values:
+            padx = 10
+            pady = 10
+            if (i == 5):
+                row = 7
+                col = 0
+            if (i == 10):
+                row = 8
+                col = 0
+            if (i == 15):
+                row = 9
+                col = 0
+            if (i == 20):
+                row = 10
+                col = 0
+            if (i == 23):
+                row = 11
+                col = 0
+            if (i == 27):
+                row = 12
+                col = 0
+            if (txt == '平均值'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: meanOn())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '中位数'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: medianOn())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '极差'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt:extrOn())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '方差'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: varOn())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '二项前n'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: PoN_T())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '泊松前n'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: PoN_P())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '方差已知的μ置信区间'):
+                btn = Button(self.bbb, height=2, width=4, padx=40, pady=pady, text=txt,
+                            command = lambda txt=txt: conf_in_AWV())
+                btn.grid(row=row, column=col, columnspan=2, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '方差未知的μ置信区间'):
+                btn = Button(self.bbb, height=2, width=4, padx=40, pady=pady, text=txt,
+                             command=lambda txt=txt: conf_in_ANV())
+                btn.grid(row=row, column=col+1, columnspan=2, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '方差\n置信区间'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: conf_in_Var())
+                btn.grid(row=row, column=col+2, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '两总体均值差置信区间'):
+                btn = Button(self.bbb, height=2, width=4, padx=40, pady=pady, text=txt,
+                             command=lambda txt=txt: conf_in_Ave2())
+                btn.grid(row=row, column=col, columnspan=2, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '两总体方差比置信区间'):
+                btn = Button(self.bbb, height=2, width=4, padx=40, pady=pady, text=txt,
+                             command=lambda txt=txt: conf_in_Var2())
+                btn.grid(row=row, column=col+1, columnspan=2, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == '←'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.delete())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="grey")
+            elif (txt == 'AC'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: clearall())
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="orange")
+            elif (txt == 'return'):
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda: self.returnback())
+                btn.grid(row=row, column=col+2, padx=1, pady=1)
+                btn.configure(background="orange")
+            else:
+                btn = Button(self.bbb, height=2, width=4, padx=padx, pady=pady, text=txt,
+                             command=lambda txt=txt: self.addChar(txt))
+                btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.configure(background="white")
+
+            col = col + 1
+            i = i + 1
+
+        def meanOn():
+            notice["text"] = "请依次输入数据，并以逗号隔开,结束后请再次点击"
+            self.C = self.str_to_la(self.string.get())
+            x = mean(self.C)
+            self.show.set(x)
+
+        def medianOn():
+            notice["text"] = "请依次输入数据，并以逗号隔开,结束后请再次点击"
+            self.C = self.str_to_la(self.string.get())
+            x = median(self.C)
+            self.show.set(x)
+
+        def extrOn():
+            notice["text"] = "请依次输入数据，并以逗号隔开,结束后请再次点击"
+            self.C = self.str_to_la(self.string.get())
+            x = max(self.C)-min(self.C)
+            self.show.set(x)
+
+        def varOn():
+            notice["text"] = "请依次输入数据，并以逗号隔开,结束后请再次点击"
+            self.C = self.str_to_la(self.string.get())
+            x = var(self.C)
+            self.show.set(x)
+
+        def PoN_T():
+            notice["text"] = "请依次输入p,n,k,并以逗号隔开,结束后请再次点击"
+            self.C = self.str_to_la(self.string.get())
+            print(self.C)
+            p = self.C[0]
+            n = int(self.C[1])
+            k = int(self.C[2])
+            x = 0
+            for i in range(0, k):
+                x += comb(n, i) * (p ** i) * ((1 - p) ** (n - i))
+            self.show.set(round(x,6))
+
+        def PoN_P():
+            notice["text"] = "请依次输入l,k,并以逗号隔开,结束后请再次点击"
+            self.C = self.str_to_la(self.string.get())
+            l = self.C[0]
+            k = int(self.C[1])
+            x = 0
+            for i in range(0, k):
+                x += (l ** i) * (e ** (-l)) / factorial(i)
+            self.show.set(x)
+
+        def conf_in_Var():
+            notice["text"] = "请输入样本标准差和置信水平及样本数，并以逗号隔开,结束后请再次点击"
+            self.C = self.str_to_la(self.string.get())
+            s = self.C[0]
+            a = self.C[1]
+            n = self.C[2]
+            x = [(sqrt(n-1))*s/sqrt(self.conf_x(round((1-a)/2,6),n-1)),(sqrt(n-1))*s/sqrt(self.conf_x(1-(1-a)/2,n-1))]
+            self.show.set(x)
+
+        def conf_in_ANV():
+            notice["text"] = "请输入均值"
+        def conf_in_AWV():
+            notice["text"] = "请输入均值和方差"
+        def conf_in_Var2():
+            notice["text"] = "请输入方差之比,结束后请再次点击"
+            return self.conf_in_Var2()
+        def conf_in_Ave2():
+            notice["text"] = "请输入均值之差"
+            return self.cconf_in_Ave2()
+        def clearall():
+            self.string.set("")
+            self.show.set("")
+            notice["text"] = "欢迎使用"
+
+    def addChar(self, char):
+        self.string.set(self.string.get() + (str(char)))
+
+    def delete(self):
+        self.string.set(self.string.get()[0:-1])
+
+    def str_to_la(self,str):
+
+        listt = str.split(',')
+        lis = list(map(lambda x: float(x), listt))
+        print(lis)
+        return lis
+
+    def conf_x(self,a,b):
+        print(a,b)
+        x = 0
+        if a==0.995:
+            if b==1:
+                x = 0.000
+            elif b==2:
+                x = 0.010
+            elif b==3:
+                x = 0.072
+            elif b==4:
+                x = 0.207
+            elif b==5:
+                x = 0.412
+            elif b==6:
+                x = 0.676
+            elif b==7:
+                x = 0.989
+            elif b==8:
+                x = 1.344
+            elif b==9:
+                x = 1.735
+            elif b==10:
+                x = 2.156
+            elif b==11:
+                x = 2.603
+            elif b==12:
+                x = 3.074
+            elif b==13:
+                x = 3.565
+            elif b==14:
+                x = 4.075
+            elif b==15:
+                x = 4.600
+            elif b==16:
+                x = 5.142
+            elif b==17:
+                x = 5.697
+            elif b==18:
+                x = 6.265
+            elif b==19:
+                x = 6.843
+            elif b==20:
+                x = 7.434
+        elif a==0.99:
+            x = 0
+            # 表尚未导入
+        elif a == 0.975:
+            x = 0
+            # 表尚未导入
+        elif a == 0.95:
+            x = 0
+            # 表尚未导入
+        elif a == 0.90:
+            x = 0
+        # 表尚未导入
+        elif a == 0.1:
+            x = 0
+        # 表尚未导入
+        elif a == 0.05:
+            x = 0
+        # 表尚未导入
+        elif a == 0.025:
+            x = 0
+        # 表尚未导入
+        elif a == 0.01:
+            x = 0
+        # 表尚未导入
+        elif a == 0.005:
+            x = 0
+        # 表尚未导入
+        print(x)
+        return x
+
+    def conf_F(self,a,n1,n2):
+        x = 0
+        # 表尚未导入
+        return x
+
+    def conf_t(self,a,n):
+        x = 0
+        # 表尚未导入
+        return x
+
+
+
+
+ss = Tk()
+Calculator(ss)
+ss.mainloop()
